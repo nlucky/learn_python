@@ -26,8 +26,8 @@ def get_stock_list(list, url):
 			continue
 
 def get_stock_info(list, info_url, fpath): 
+	count = 0
 	for stock in list:
-		count = 0
 		url = info_url + stock + '.html'
 		html = get_html_text(url)
 		try:
@@ -35,24 +35,23 @@ def get_stock_info(list, info_url, fpath):
 				continue
 			info_dic = {}
 			soup = BeautifulSoup(html, 'html.parser')
-			stock_info = soup.find('div', attrs = 'stock-bets')
-			stock_name = soup.find_all(attrs = {'class' : 'bets-name'})[0]
-			info_dic.update({'股票名称' : stock_name})
+			stock_info = soup.find('div', attrs = {'class':'stock-bets'})
+			stock_name = stock_info.find_all(attrs = {'class' : 'bets-name'})[0]
+			info_dic.update({'股票名称' : stock_name.text.split()[0]})
 			key_list = stock_info.find_all('dt')
 			value_list = stock_info.find_all('dd')
-			for i in xrange(len(key_list)):
-				key = key_list[i]
-				value = value_list[i]
+			for i in range(len(key_list)):
+				key = key_list[i].text
+				value = value_list[i].text
 				info_dic[key] = value
 
 			with open(fpath, 'a', encoding='utf-8') as f:
-				f.write( str(infoDict) + '\n' )
+				f.write( str(info_dic) + '\n' )
 				count = count + 1
-				print("\r当前进度: {:.2f}%".format(count*100/len(list)),end="")
-
+				print("\r当前进度: {:.2f}% \n".format(count*100/len(list)),end="")
 		except:
 			count = count + 1
-			print("\r当前进度: {:.2f}%".format(count*100/len(list)),end="")
+			print("\r当前进度 nil: {:.2f}% \n".format(count*100/len(list)),end="")
 
 			continue
 		
@@ -64,7 +63,7 @@ def main():
 	info_url = 'https://gupiao.baidu.com/stock/'
 	html = get_html_text(list_url)
 	stock_list = []
-	outfile = 'stock.txt'
+	outfile = 'stockinfo.txt'
 	get_stock_list(stock_list, list_url)
 	get_stock_info(stock_list, info_url, outfile)
 
