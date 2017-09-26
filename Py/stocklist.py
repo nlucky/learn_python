@@ -4,6 +4,9 @@ import requests
 from bs4 import BeautifulSoup
 import traceback
 import re
+import models
+
+
 
 def get_html_text(url):
 	try:
@@ -45,13 +48,15 @@ def get_stock_info(list, info_url, fpath):
 				value = value_list[i].text
 				info_dic[key] = value
 
-			with open(fpath, 'a', encoding='utf-8') as f:
-				f.write( str(info_dic) + '\n' )
-				count = count + 1
-				print("\r当前进度: {:.2f}% \n".format(count*100/len(list)),end="")
-		except:
+			stock = Stock(info_dic)
+
+			# with open(fpath, 'a', encoding='utf-8') as f:
+			# 	f.write( str(info_dic) + '\n' )
 			count = count + 1
-			print("\r当前进度 nil: {:.2f}% \n".format(count*100/len(list)),end="")
+			print("\r当前进度: {:.2f}% \n".format(count*100/len(list)),end="")
+		except:
+			# count = count + 1
+			# print("\r当前进度 nil: {:.2f}% \n".format(count*100/len(list)),end="")
 
 			continue
 		

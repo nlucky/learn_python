@@ -101,6 +101,8 @@ venv.bak/
 # other file
 *.txt
 *.html
+Py/*.txt
+Py/*.html
 
 # mypy
 .mypy_cache/
